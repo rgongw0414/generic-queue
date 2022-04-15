@@ -187,7 +187,7 @@ queue* queueCreate(size_t elemSize){
    queue* myQueue = malloc(sizeof(queue));
    if (myQueue == NULL){
        printf("failed to allocate memory to myQueue\n");
-       exit(1);
+       return NULL;
    }
    myQueue->front = NULL;
    myQueue->rear = NULL;
