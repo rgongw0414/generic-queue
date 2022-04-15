@@ -5,7 +5,7 @@
 gcc queue_ll.c && ./a.out
 ```
 
-#### testing input:
+#### testing function:
 ```c
 int main(int argc, char* argv[]){
  // queue of string
