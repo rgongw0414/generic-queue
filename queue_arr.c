@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+//*** implement a circular, generic-dataType queue with array. ***//
+
 typedef unsigned char byte;
 
-// implement by array
 typedef struct queue{
     byte* data;
     int capacity;
