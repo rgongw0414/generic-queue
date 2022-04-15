@@ -18,6 +18,16 @@ typedef struct queue{
     size_t elemSize;
 }queue;
 
+
+int is_empty(queue* myQueue){
+    if (myQueue->front == NULL){
+        //printf("the queue is empty\n");
+        return 1;
+    }
+    else
+        return 0;
+}
+
 node* nodeCreate(size_t elemSize){
     node* newNode = malloc(sizeof(struct node));
     if (newNode == NULL){
@@ -36,7 +46,7 @@ node* nodeCreate(size_t elemSize){
 void enqueue(queue* myQueue, void* data){
     node* newNode = nodeCreate(myQueue->elemSize);
     memcpy((void*)newNode->data, data, myQueue->elemSize);
-    if (myQueue->rear == NULL){
+    if (is_empty(myQueue)){
         // rear(front)->NULL
         newNode->next = NULL;
         myQueue->rear = myQueue->front = newNode;
@@ -50,23 +60,129 @@ void enqueue(queue* myQueue, void* data){
     }
 }
 
+node* get_front(queue* myQueue){
+    if (is_empty(myQueue)){
+        //printf("the queue is empty\n");
+        return NULL;
+    }
+    else{
+        return myQueue->front;
+    }
+}
+
+node* get_rear(queue* myQueue){
+    if (is_empty(myQueue)){
+        //printf("the queue is empty\n");
+        return NULL;
+    }
+    else{
+        return myQueue->rear;
+    }
+}
+
+void print_int(node* myNode){
+    printf("%d\n", *(int*)myNode->data);
+}
+
+void print_float(node* myNode){
+    printf("%f\n", *(float*)myNode->data);
+}
+
+void print_double(node* myNode){
+    printf("%lf\n", *(double*)myNode->data);
+}
+
+void print_char(node* myNode){
+    printf("%c\n", *(char*)myNode->data);
+}
+
+void print_string(node* myNode){
+    printf("%s\n", (char*)myNode->data);
+}
+
+void traverse(queue* myQueue, void(*func)(node* myNode)){
+    // for each node, from rear to front, visit it with func.
+    if (is_empty(myQueue)){
+        printf("queue is empty\n");
+        return;
+    }
+    node* myNode = myQueue->rear;
+    if (myQueue->front == NULL) return;
+    node* next;
+    while (myNode != NULL){
+        next = myNode->next;
+        func(myNode);
+        myNode = next;
+    }
+}
+
+void nodeDestroy(node* myNode){
+    if (myNode == NULL || myNode->data == NULL) return;
+    free(myNode->data);
+    free(myNode);
+    myNode->data = NULL; // *** always remember to set pointer to NULL, after free it's memory space; ***
+    myNode->next = NULL; // *** since after free'ing it, the pointed content would be set to some default value, ***
+    myNode = NULL;       // *** otherwise, it may lead to ERROR. ***
+}
+
+void queueClear(queue* myQueue){
+    // destroy (free) each node in myQueue
+    if (myQueue == NULL) return;
+    if (is_empty(myQueue)) return;
+    // destroy node from rear to front (rear->...->front->NULL)
+    traverse(myQueue, nodeDestroy);
+}
+
+queue* queueDestroy(queue* myQueue){
+    // destroy (free) myQueue
+    if (myQueue == NULL) return NULL;
+    queueClear(myQueue);
+    free(myQueue);
+    myQueue->rear = myQueue->front = NULL;
+    myQueue = NULL;
+    return myQueue;
+}
+
 void dequeue(queue* myQueue){
-    if (myQueue->rear == myQueue->front){
+    if (is_empty(myQueue)){
         printf("queue is empty\n");
         return;
     }
     if (myQueue == NULL){
         printf("myQueue points to NULL\n");
-        exit(1);
+        return;
     }
-    node* Node = myQueue->rear;
-    while(Node->next != myQueue->front){
-        Node = Node->next;
+    if (myQueue->rear == myQueue->front){
+        // only one node left in queue
+        free(myQueue->rear->data);
+        myQueue->rear = myQueue->front = NULL;
     }
-    free(Node->next->data);
-    Node->next->next = NULL;
-    free(Node->next);
-    myQueue->front = Node;
+    else{
+        node* Node = myQueue->rear; 
+        while (Node->next != myQueue->front) // traverse to the 2nd last node
+            Node = Node->next;
+        nodeDestroy(Node->next); // destroy front
+        myQueue->front = Node; // point rear to the 2nd last node
+        myQueue->front->next = NULL;
+    }
+}
+
+int get_length(queue* myQueue){
+    if (myQueue == NULL){
+        printf("myQueue points to NULL\n");
+        return -1;
+    }
+    node* myNode = myQueue->rear;
+    if (myNode == NULL){ 
+        printf("myQueue->rear points to NULL\n");
+        return -1;
+    }
+    int len = 0;
+    while (myNode != NULL){
+        len++;
+        myNode = myNode->next;
+    }
+    return len;
 }
 
 queue* queueCreate(size_t elemSize){
@@ -82,18 +198,38 @@ queue* queueCreate(size_t elemSize){
 }
 
 int main(int argc, char* argv[]){
-   queue* myQueue = queueCreate(sizeof(int));
-   int* n = malloc(sizeof(int));
-   for (int i = 0; i < 3; i++){      
-       *n = i + 1;
+    // queue of string
+   queue* myQueue = queueCreate(sizeof(char*));
+   char* n = malloc(sizeof(char) * 10);
+   enqueue(myQueue, "hello");
+   n = "apple";
+   enqueue(myQueue, n);
+   n = "grape";
+   enqueue(myQueue, n);
+   dequeue(myQueue);
+   traverse(myQueue, print_string);
+
+   myQueue = queueDestroy(myQueue);
+   if (myQueue == NULL)
+       printf("ffffffffffffffffff\n");
+   printf("len: %d\n", get_length(myQueue));
+/*
+   // queue of char
+   queue* myQueue = queueCreate(sizeof(char));
+   char* n = malloc(sizeof(char));
+   for (int i = 0; i < 5; i++){      
+       *n = 'a' + i;
        enqueue(myQueue, n);
    }
-   printf("front: %d\n", *((int*)myQueue->front->data));
-   dequeue(myQueue);
-   printf("front: %d\n", *((int*)myQueue->front->data));
-   dequeue(myQueue);
-   printf("front: %d\n", *((int*)myQueue->front->data));
-   dequeue(myQueue);
-   printf("front: %d\n", *((int*)myQueue->front->data));
+   traverse(myQueue, print_char);*/
+/*
+   // queue of double
+   queue* myQueue = queueCreate(sizeof(double));
+   double* n = malloc(sizeof(double));
+   for (int i = 0; i < 5; i++){      
+       *n = (double)(i + 1);
+       enqueue(myQueue, n);
+   }
+   traverse(myQueue, print_double);*/
 }
 
