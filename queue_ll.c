@@ -6,19 +6,16 @@
 
 typedef unsigned char byte;
 
-
 typedef struct node{
     byte* data;
     struct node* next;
 }node;
-
 
 typedef struct queue{
     node* front;
     node* rear;
     size_t elemSize;
 }queue;
-
 
 int is_empty(queue* myQueue){
     if (myQueue->front == NULL){
