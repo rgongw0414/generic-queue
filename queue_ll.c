@@ -216,6 +216,7 @@ int main(int argc, char* argv[]){
 
     printf("-\nall element in queue, from rear to front:\n\n");
    traverse(myQueue, print_string);
+    printf("-\n");
 
    myQueue = queueDestroy(myQueue); // return NULL to the destroyed queue, so as to disable it's all function.
    /*if (myQueue == NULL) 
