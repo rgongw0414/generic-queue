@@ -208,8 +208,8 @@ int main(int argc, char* argv[]){
    traverse(myQueue, print_string);
 
    myQueue = queueDestroy(myQueue); // return NULL to the destroyed queue, so as to disable it's all function.
-   if (myQueue == NULL)
-       printf("ffffffffffffffffff\n");
+   /*if (myQueue == NULL) 
+       printf("ffffffffffffffffff\n");*/
    printf("len: %d\n", get_length(myQueue));
 /*
    // queue of char
