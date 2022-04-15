@@ -117,7 +117,7 @@ void traverse(queue* myQueue, void(*func)(node* myNode)){
     }
 }
 
-void nodeDestroy(node* myNode){
+void nodeDestroy(node* myNode){ // if just want to destroy one node, when function returned, remember to set the node to NULL, or realloc() mem space to it.
     if (myNode == NULL || myNode->data == NULL) return;
     free(myNode->data);
     free(myNode);
@@ -210,7 +210,7 @@ int main(int argc, char* argv[]){
    dequeue(myQueue);
    traverse(myQueue, print_string);
 
-   myQueue = queueDestroy(myQueue);
+   myQueue = queueDestroy(myQueue); // return NULL to the destroyed queue, so as to disable it's all function.
    if (myQueue == NULL)
        printf("ffffffffffffffffff\n");
    printf("len: %d\n", get_length(myQueue));
