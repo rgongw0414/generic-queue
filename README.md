@@ -25,13 +25,22 @@ int main(int argc, char* argv[]){
  ```
 #### output:
 ```
+initializng a queue with linked-list structure, string element:
+
 enQueue string element:  "hello"
+
 enQueue string element:  "apple"
+
 enQueue string element:  "grape"
+
 deQueue a element from front
+
+-
 all element in queue, from rear to front:
+
 grape
 apple
+-
 myQueue points to NULL
 len: -1
 ```
