@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+//*** implement a generic-dataType queue, with linked-list structure. ***//
 
 typedef unsigned char byte;
 
