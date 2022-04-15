@@ -139,9 +139,9 @@ queue* queueDestroy(queue* myQueue){
     if (myQueue == NULL) return NULL;
     queueClear(myQueue);
     free(myQueue);
-    myQueue->rear = myQueue->front = NULL;
-    myQueue = NULL;
-    return myQueue;
+    myQueue->rear = myQueue->front = NULL; // this does modify rear's & front's pointer value, because this line does reach myQueue's actual value;
+    myQueue = NULL; // instead, in this line, since myQueue is merely a local variable, this line would not change myQueue in original scope,
+    return myQueue; // so it should be returned to caller's scope.
 }
 
 void dequeue(queue* myQueue){
