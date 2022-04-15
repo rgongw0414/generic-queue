@@ -4,7 +4,7 @@
 
 //*** implement a generic-dataType queue, with linked-list structure. ***//
 
-typedef unsigned char byte;
+typedef unsigned char byte; // assumption: unsigned char takes 1 byte.
 
 typedef struct node{
     byte* data;
