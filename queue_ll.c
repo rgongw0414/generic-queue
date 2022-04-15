@@ -196,15 +196,25 @@ queue* queueCreate(size_t elemSize){
 }
 
 int main(int argc, char* argv[]){
+    // initializng a queue with linked-list structure, string element:
     // queue of string
    queue* myQueue = queueCreate(sizeof(char*));
    char* n = malloc(sizeof(char) * 10);
+   printf("enQueue string element:  \"hello\"\n");
    enqueue(myQueue, "hello");
+
+   printf("enQueue string element:  \"apple\"\n");
    n = "apple";
    enqueue(myQueue, n);
+
+   printf("enQueue string element:  \"grape\"\n");
    n = "grape";
    enqueue(myQueue, n);
+
+   printf("deQueue a element from front\n");
    dequeue(myQueue);
+
+    printf("all element in queue, from rear to front:\n");
    traverse(myQueue, print_string);
 
    myQueue = queueDestroy(myQueue); // return NULL to the destroyed queue, so as to disable it's all function.
