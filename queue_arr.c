@@ -44,9 +44,9 @@ void enqueue(queue* myQueue, void* data){
     if (isFull(myQueue))
         printf("the queue is full\n"); // enqueue failed
     else{
+        // enqueue succeed
         memcpy((void*)(myQueue->data + (myQueue->rear*myQueue->typeSize)), (void*)data, myQueue->typeSize);
         myQueue->rear = (myQueue->rear+1) % myQueue->capacity;
-        return; // enqueue succeed
     }
 }
 
@@ -72,17 +72,26 @@ int getLength(queue* myQueue){
         printf("the queue points to NULL\n");
         return -1;
     }
-    return ((myQueue->rear - myQueue->front + myQueue->capacity) % myQueue->capacity);
+    // (a + b) % c = ((a%c) + (b%c)) % c
+    return ((myQueue->rear - myQueue->front) + myQueue->capacity) % myQueue->capacity;
 }
 
-void traverse(queue* myQueue, void(*func)(byte* data)){
-    byte* ptr = myQueue->data + myQueue->typeSize*myQueue->front;
+void traverse(queue* myQueue, void(*func)(queue* myQueue, int index)){
+    if (myQueue == NULL){
+        printf("the queue points to NULL\n");
+        return;
+    }
+    int index = myQueue->front;
+    while (index != myQueue->rear){
+        func(myQueue, index);
+        index = (index + 1) % myQueue->capacity;
+    }
 }
 
 void queueClear(queue* myQueue){
     if (myQueue == NULL){
         printf("the queue points to NULL\n");
-        return NULL;
+        return;
     }
     myQueue->rear = myQueue->front = 0;
     free(myQueue->data);
@@ -117,21 +126,51 @@ queue* queueCreate(int capacity, size_t typeSize){
     return myQueue;
 }
 
+void print_int(queue* myQueue, int index){
+    printf("%d\n", ((int*)myQueue->data)[index]);
+}
+
+void print_char(queue* myQueue, int index){
+    printf("%c\n", ((char*)myQueue->data)[index]);
+}
+
+void print_float(queue* myQueue, int index){
+    printf("%f\n", ((float*)myQueue->data)[index]);
+}
+
+void print_double(queue* myQueue, int index){
+    printf("%lf\n", ((double*)myQueue->data)[index]);
+}
+
+void print_string(queue* myQueue, int index){
+    printf("%s\n", (char*)myQueue->data + myQueue->typeSize * (size_t)index);
+}
+
 int main(int argc, char* argv[]){
-    queue* myQueue = queueCreate(3, sizeof(int));
+    int capacity = 3 + 1;
+    queue* myQueue = queueCreate(capacity, sizeof(int));
+    printf("initializing an int queue with capacity %d\n", capacity);
     int* n = malloc(sizeof(int));
     *n = 1;
     enqueue(myQueue, n);
+    printf("enQueue %d\n", *n);
+
     *n = 2;
     enqueue(myQueue, n);
+    printf("enQueue %d\n", *n);
+
     *n = 3;
     enqueue(myQueue, n);
+    printf("enQueue %d\n", *n);
 
     int* front;
     front = dequeue(myQueue);
-    printf("deQueue: %d, len: %d\n", *front, getLength(myQueue));
+    printf("deQueue: %d, queue length: %d\n", *front, getLength(myQueue));
 
-    *n = 3;
+    *n = 4;
     enqueue(myQueue, n);
-    printf("len: %d\n", getLength(myQueue));
+    printf("enQueue %d\n", *n);
+
+    printf("-\ncurrent elements in queue (from front to rear):\n");
+    traverse(myQueue, print_int);
 }
