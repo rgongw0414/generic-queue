@@ -1,10 +1,9 @@
 # queue
 
-#### how to use:
+## queue_arr.c (circular queue):
 ```bash
 gcc queue_arr.c && ./a.out
 ```
-## queue_arr.c (circular queue):
 #### testing function:
 ```c
 int main(int argc, char* argv[]){
@@ -53,6 +52,9 @@ current elements in queue (from front to rear):
 ```
 
 ## queue_ll.c:
+```bash
+gcc queue_ll.c && ./a.out
+```
 #### testing function:
 ```c
 int main(int argc, char* argv[]){
