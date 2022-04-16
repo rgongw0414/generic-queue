@@ -61,8 +61,7 @@ void* dequeue(queue* myQueue){
         return NULL;
     }
     else{
-        byte* front_data = malloc(sizeof(myQueue->typeSize));
-        memcpy((void*)front_data, (void*)(myQueue->data + myQueue->typeSize*myQueue->front), myQueue->typeSize);
+        void* front_data = (void*)(myQueue->data + myQueue->typeSize*myQueue->front);
         myQueue->front = (myQueue->front+1) % myQueue->capacity;
         return front_data;
     }
@@ -76,12 +75,26 @@ int getLength(queue* myQueue){
     return ((myQueue->rear - myQueue->front + myQueue->capacity) % myQueue->capacity);
 }
 
+void traverse(queue* myQueue, void(*func)(byte* data)){
+    byte* ptr = myQueue->data + myQueue->typeSize*myQueue->front;
+}
+
+void queueClear(queue* myQueue){
+    if (myQueue == NULL){
+        printf("the queue points to NULL\n");
+        return NULL;
+    }
+    myQueue->rear = myQueue->front = 0;
+    free(myQueue->data);
+    myQueue->data = NULL;
+}
+
 queue* queueDestroy(queue* myQueue){
     if (myQueue == NULL){
         printf("the queue points to NULL\n");
         return NULL;
     }
-    free(myQueue->data);
+    queueClear(myQueue);
     free(myQueue);
     return NULL;
 }
